@@ -14,7 +14,7 @@ unicode2ascii - Unicode to Ascii command-line tool
 \[--\]
 
 ## DESCRIPTION
-The **unicode2ascii** utility filters Unicode characters in the standard input and replace them by their standard or corrected Unicode equivalent,
+The **unicode2ascii** utility filters Unicode characters in the standard input and replaces them by their standard or corrected Unicode equivalent,
 or its internal equivalent if missing in Unicode.
 
 Command line options disable filtering mode and analyze Unicode characters (**-a** option)
