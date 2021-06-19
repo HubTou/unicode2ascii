@@ -1,0 +1,116 @@
+.Dd June 19, 2021
+.Dt unicode2ascii 3
+.Os
+.Sh NAME
+.Nm unicode2ascii
+.Nd Unicode to Ascii Python library
+.Sh SYNOPSIS
+.Em import unicode2ascii
+.Pp
+.Ft Boolean
+.Fn unicode2ascii.is_unicode_category "String character, String category"
+.Ft Boolean
+.Fn unicode2ascii.is_unicode_letter "String character"
+.Ft Boolean
+.Fn unicode2ascii.is_unicode_mark "String character"
+.Ft Boolean
+.Fn unicode2ascii.is_unicode_number "String character"
+.Ft Boolean
+.Fn unicode2ascii.is_unicode_punctuation "String character"
+.Ft Boolean
+.Fn unicode2ascii.is_unicode_symbol "String character"
+.Ft Boolean
+.Fn unicode2ascii.is_unicode_separator "String character"
+.Ft Boolean
+.Fn unicode2ascii.is_unicode_other "String character"
+.Ft String
+.Fn unicode2ascii.unicode_category "String category"
+.Ft String
+.Fn unicode2ascii.unicode_to_ascii_character "String character, [String default = '']"
+.Ft String
+.Fn unicode2ascii.unicode_to_ascii_string "String string, [String default = '']"
+.Fn unicode2ascii.analyze_unicode_character "String character"
+.Sh DESCRIPTION
+The
+.Fn is_unicode_category
+function returns True if
+.Op character
+belongs to the
+.Op category
+Unicode category or False if not.
+.Pp
+All the other
+.Fn is_unicode_XXX
+functions return True if
+.Op character
+belongs to the XXX category.
+.Pp
+The
+.Fn unicode_category
+function return a one-line description of the specified
+.Op category .
+.Pp
+The
+.Fn unicode_to_ascii_character
+function returns the ASCII equivalent of an unicode
+.Op character ,
+or an unchanged non-Unicode character.
+If there is no ASCII equivalent, it returns the 
+.Op default
+string ("" if not provided).
+.Pp
+The
+.Fn unicode_to_ascii_string
+does the same for all the characters in the
+.Op string .
+.Pp
+The
+.Fn analyze_unicode_character
+function returns all available information about the Unicode
+.Op character .
+.Sh ENVIRONMENT
+The
+.Ev UNICODE2ASCII_DEBUG
+environment variable can also be set to any value to enable debug mode.
+.Sh SEE ALSO
+.Xr unicode2ascii 1 ,
+.Xr iconv 3
+.Sh STANDARDS
+The
+.Nm
+library tries to follow the PEP 8 style guide for Python code.
+.Sh HISTORY
+This library was made for
+.Lk https://github.com/HubTou/PNU [The PNU project]
+.Sh LICENSE
+This library is available under the 3-clause BSD license.
+.Sh AUTHORS
+.An Hubert Tournier
+.Sh CAVEATS
+So far, only the following Unicode character sets are processed for missing ASCII equivalents:
+.Bl -bullet
+.It
+C0 control characters
+.It
+C1 control characters
+.It
+Basic Latin characters
+.It
+Latin-1 Supplement
+.It
+Latin Extended-A
+.It
+Latin Extended-B
+.It
+Latin Extended Additional
+.It
+IPA Extensions
+.It
+Spacing Modifier Letters
+.It
+Unicode symbols
+.It
+General Punctuation
+.It
+Number Forms
+.El
