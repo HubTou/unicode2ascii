@@ -38,7 +38,7 @@ The UNICODE2ASCII_DEBUG environment variable can also be set to any value to ena
 The **unicode2ascii** utility exits 0 on success, and >0 if an error occurs.
 
 ## SEE ALSO
-[unicode2ascii(3)](https://github.com/HubTou/unicode2ascii/blob/main/UNICODE2ASCII.3.md)
+[unicode2ascii(3)](https://github.com/HubTou/unicode2ascii/blob/main/UNICODE2ASCII.3.md),
 [iconv(1)](https://www.freebsd.org/cgi/man.cgi?query=iconv)
 
 ## STANDARDS
@@ -69,4 +69,3 @@ So far, only the following Unicode character sets are processed for missing ASCI
 * Unicode symbols
 * General Punctuation
 * Number Forms
-
