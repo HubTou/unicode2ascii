@@ -34,8 +34,6 @@ Options | Use
 ## ENVIRONMENT
 The UNICODE2ASCII_DEBUG environment variable can also be set to any value to enable debug mode.
 
-## FILES
-
 ## EXIT STATUS
 The **unicode2ascii** utility exits 0 on success, and >0 if an error occurs.
 
