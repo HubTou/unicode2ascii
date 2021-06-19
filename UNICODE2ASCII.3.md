@@ -48,7 +48,7 @@ The **analyze_unicode_character**() function returns all available information a
 The UNICODE2ASCII_DEBUG environment variable can be set to any value to enable debug mode.
 
 ## SEE ALSO
-[unicode2ascii(1)](https://github.com/HubTou/unicode2ascii/blob/main/UNICODE2ASCII.1.md)
+[unicode2ascii(1)](https://github.com/HubTou/unicode2ascii/blob/main/UNICODE2ASCII.1.md),
 [iconv(3)](https://www.freebsd.org/cgi/man.cgi?query=iconv&sektion=3)
 
 ## STANDARDS
@@ -77,4 +77,3 @@ So far, only the following Unicode character sets are processed for missing ASCI
 * Unicode symbols
 * General Punctuation
 * Number Forms
-
