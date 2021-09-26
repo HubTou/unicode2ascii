@@ -5,13 +5,14 @@ Author: Hubert Tournier
 """
 
 import getopt
+import locale
 import logging
 import os
 import sys
 import unicodedata
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: unicode2ascii - Unicode to Ascii command-line tool and library v1.0.0 (June 19, 2021) by Hubert Tournier $"
+ID = "@(#) $Id: unicode2ascii - Unicode to Ascii command-line tool and library v1.1.1 (September 26, 2021) by Hubert Tournier $"
 
 # Conversion table for Unicode characters incorrectly translated to ASCII:
 corrected_unicode_to_ascii = {
@@ -290,6 +291,248 @@ additional_unicode_to_ascii = {
     "Ƅ": "6",  # LATIN CAPITAL LETTER TONE SIX
     "ƅ": "6",  # LATIN SMALL LETTER TONE SIX
     "ǃ": "!",  # LATIN LETTER RETROFLEX CLICK
+    'Ѐ': "IE", # CYRILLIC CAPITAL LETTER IE WITH GRAVE
+    'Ё': "IO", # CYRILLIC CAPITAL LETTER IO
+    'Ђ': "DJE", # CYRILLIC CAPITAL LETTER DJE
+    'Ѓ': "GJE", # CYRILLIC CAPITAL LETTER GJE
+    'Є': "IE", # CYRILLIC CAPITAL LETTER UKRAINIAN IE
+    'Ѕ': "DZE", # CYRILLIC CAPITAL LETTER DZE
+    'І': "I", # CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I
+    'Ї': "YI", # CYRILLIC CAPITAL LETTER YI
+    'Ј': "JE", # CYRILLIC CAPITAL LETTER JE
+    'Љ': "LJE", # CYRILLIC CAPITAL LETTER LJE
+    'Њ': "NJE", # CYRILLIC CAPITAL LETTER NJE
+    'Ћ': "TSHE", # CYRILLIC CAPITAL LETTER TSHE
+    'Ќ': "KJE", # CYRILLIC CAPITAL LETTER KJE
+    'Ѝ': "I", # CYRILLIC CAPITAL LETTER I WITH GRAVE
+    'Ў': "U", # CYRILLIC CAPITAL LETTER SHORT U
+    'Џ': "DZHE", # CYRILLIC CAPITAL LETTER DZHE
+    'А': "A", # CYRILLIC CAPITAL LETTER A
+    'Б': "BE", # CYRILLIC CAPITAL LETTER BE
+    'В': "VE", # CYRILLIC CAPITAL LETTER VE
+    'Г': "GHE", # CYRILLIC CAPITAL LETTER GHE
+    'Д': "DE", # CYRILLIC CAPITAL LETTER DE
+    'Е': "IE", # CYRILLIC CAPITAL LETTER IE
+    'Ж': "ZHE", # CYRILLIC CAPITAL LETTER ZHE
+    'З': "ZE", # CYRILLIC CAPITAL LETTER ZE
+    'И': "I", # CYRILLIC CAPITAL LETTER I
+    'Й': "I", # CYRILLIC CAPITAL LETTER SHORT I
+    'К': "KA", # CYRILLIC CAPITAL LETTER KA
+    'Л': "EL", # CYRILLIC CAPITAL LETTER EL
+    'М': "EM", # CYRILLIC CAPITAL LETTER EM
+    'Н': "EN", # CYRILLIC CAPITAL LETTER EN
+    'О': "O", # CYRILLIC CAPITAL LETTER O
+    'П': "PE", # CYRILLIC CAPITAL LETTER PE
+    'Р': "ER", # CYRILLIC CAPITAL LETTER ER
+    'С': "ES", # CYRILLIC CAPITAL LETTER ES
+    'Т': "TE", # CYRILLIC CAPITAL LETTER TE
+    'У': "U", # CYRILLIC CAPITAL LETTER U
+    'Ф': "EF", # CYRILLIC CAPITAL LETTER EF
+    'Х': "HA", # CYRILLIC CAPITAL LETTER HA
+    'Ц': "TSE", # CYRILLIC CAPITAL LETTER TSE
+    'Ч': "CHE", # CYRILLIC CAPITAL LETTER CHE
+    'Ш': "SHA", # CYRILLIC CAPITAL LETTER SHA
+    'Щ': "SHCHA", # CYRILLIC CAPITAL LETTER SHCHA
+    'Ы': "YERU", # CYRILLIC CAPITAL LETTER YERU
+    'Э': "E", # CYRILLIC CAPITAL LETTER E
+    'Ю': "YU", # CYRILLIC CAPITAL LETTER YU
+    'Я': "YA", # CYRILLIC CAPITAL LETTER YA
+    'а': "a", # CYRILLIC SMALL LETTER A
+    'б': "be", # CYRILLIC SMALL LETTER BE
+    'в': "ve", # CYRILLIC SMALL LETTER VE
+    'г': "ghe", # CYRILLIC SMALL LETTER GHE
+    'д': "de", # CYRILLIC SMALL LETTER DE
+    'е': "ie", # CYRILLIC SMALL LETTER IE
+    'ж': "zhe", # CYRILLIC SMALL LETTER ZHE
+    'з': "ze", # CYRILLIC SMALL LETTER ZE
+    'и': "i", # CYRILLIC SMALL LETTER I
+    'й': "i", # CYRILLIC SMALL LETTER SHORT I
+    'к': "ka", # CYRILLIC SMALL LETTER KA
+    'л': "el", # CYRILLIC SMALL LETTER EL
+    'м': "em", # CYRILLIC SMALL LETTER EM
+    'н': "en", # CYRILLIC SMALL LETTER EN
+    'о': "o", # CYRILLIC SMALL LETTER O
+    'п': "pe", # CYRILLIC SMALL LETTER PE
+    'р': "er", # CYRILLIC SMALL LETTER ER
+    'с': "es", # CYRILLIC SMALL LETTER ES
+    'т': "te", # CYRILLIC SMALL LETTER TE
+    'у': "u", # CYRILLIC SMALL LETTER U
+    'ф': "ef", # CYRILLIC SMALL LETTER EF
+    'х': "ha", # CYRILLIC SMALL LETTER HA
+    'ц': "tse", # CYRILLIC SMALL LETTER TSE
+    'ч': "che", # CYRILLIC SMALL LETTER CHE
+    'ш': "sha", # CYRILLIC SMALL LETTER SHA
+    'щ': "shcha", # CYRILLIC SMALL LETTER SHCHA
+    'ы': "yeru", # CYRILLIC SMALL LETTER YERU
+    'э': "e", # CYRILLIC SMALL LETTER E
+    'ю': "yu", # CYRILLIC SMALL LETTER YU
+    'я': "ya", # CYRILLIC SMALL LETTER YA
+    'ѐ': "ie", # CYRILLIC SMALL LETTER IE WITH GRAVE
+    'ё': "io", # CYRILLIC SMALL LETTER IO
+    'ђ': "dje", # CYRILLIC SMALL LETTER DJE
+    'ѓ': "gje", # CYRILLIC SMALL LETTER GJE
+    'є': "ie", # CYRILLIC SMALL LETTER UKRAINIAN IE
+    'ѕ': "dze", # CYRILLIC SMALL LETTER DZE
+    'і': "i", # CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I
+    'ї': "yi", # CYRILLIC SMALL LETTER YI
+    'ј': "je", # CYRILLIC SMALL LETTER JE
+    'љ': "lje", # CYRILLIC SMALL LETTER LJE
+    'њ': "nje", # CYRILLIC SMALL LETTER NJE
+    'ћ': "tshe", # CYRILLIC SMALL LETTER TSHE
+    'ќ': "kje", # CYRILLIC SMALL LETTER KJE
+    'ѝ': "i", # CYRILLIC SMALL LETTER I WITH GRAVE
+    'ў': "u", # CYRILLIC SMALL LETTER SHORT U
+    'џ': "dzhe", # CYRILLIC SMALL LETTER DZHE
+    'Ѡ': "OMEGA", # CYRILLIC CAPITAL LETTER OMEGA
+    'ѡ': "omega", # CYRILLIC SMALL LETTER OMEGA
+    'Ѣ': "YAT", # CYRILLIC CAPITAL LETTER YAT
+    'ѣ': "yat", # CYRILLIC SMALL LETTER YAT
+    'Ѥ': "E", # CYRILLIC CAPITAL LETTER IOTIFIED E
+    'ѥ': "e", # CYRILLIC SMALL LETTER IOTIFIED E
+    'Ѧ': "YUS", # CYRILLIC CAPITAL LETTER LITTLE YUS
+    'ѧ': "yus", # CYRILLIC SMALL LETTER LITTLE YUS
+    'Ѩ': "YUS", # CYRILLIC CAPITAL LETTER IOTIFIED LITTLE YUS
+    'ѩ': "yus", # CYRILLIC SMALL LETTER IOTIFIED LITTLE YUS
+    'Ѫ': "YUS", # CYRILLIC CAPITAL LETTER BIG YUS
+    'ѫ': "yus", # CYRILLIC SMALL LETTER BIG YUS
+    'Ѭ': "YUS", # CYRILLIC CAPITAL LETTER IOTIFIED BIG YUS
+    'ѭ': "yus", # CYRILLIC SMALL LETTER IOTIFIED BIG YUS
+    'Ѯ': "KSI", # CYRILLIC CAPITAL LETTER KSI
+    'ѯ': "ksi", # CYRILLIC SMALL LETTER KSI
+    'Ѱ': "PSI", # CYRILLIC CAPITAL LETTER PSI
+    'ѱ': "psi", # CYRILLIC SMALL LETTER PSI
+    'Ѳ': "FITA", # CYRILLIC CAPITAL LETTER FITA
+    'ѳ': "fita", # CYRILLIC SMALL LETTER FITA
+    'Ѵ': "IZHITSA", # CYRILLIC CAPITAL LETTER IZHITSA
+    'ѵ': "izhitsa", # CYRILLIC SMALL LETTER IZHITSA
+    'Ѷ': "IZHITSA", # CYRILLIC CAPITAL LETTER IZHITSA WITH DOUBLE GRAVE ACCENT
+    'ѷ': "izhitsa", # CYRILLIC SMALL LETTER IZHITSA WITH DOUBLE GRAVE ACCENT
+    'Ѹ': "UK", # CYRILLIC CAPITAL LETTER UK
+    'ѹ': "uk", # CYRILLIC SMALL LETTER UK
+    'Ѻ': "OMEGA", # CYRILLIC CAPITAL LETTER ROUND OMEGA
+    'ѻ': "omega", # CYRILLIC SMALL LETTER ROUND OMEGA
+    'Ѽ': "OMEGA", # CYRILLIC CAPITAL LETTER OMEGA WITH TITLO
+    'ѽ': "omega", # CYRILLIC SMALL LETTER OMEGA WITH TITLO
+    'Ѿ': "OT", # CYRILLIC CAPITAL LETTER OT
+    'ѿ': "ot", # CYRILLIC SMALL LETTER OT
+    'Ҁ': "KOPPA", # CYRILLIC CAPITAL LETTER KOPPA
+    'ҁ': "koppa", # CYRILLIC SMALL LETTER KOPPA
+    'Ҋ': "I", # CYRILLIC CAPITAL LETTER SHORT I WITH TAIL
+    'ҋ': "i", # CYRILLIC SMALL LETTER SHORT I WITH TAIL
+    'Ҏ': "ER", # CYRILLIC CAPITAL LETTER ER WITH TICK
+    'ҏ': "er", # CYRILLIC SMALL LETTER ER WITH TICK
+    'Ґ': "GHE", # CYRILLIC CAPITAL LETTER GHE WITH UPTURN
+    'ґ': "ghe", # CYRILLIC SMALL LETTER GHE WITH UPTURN
+    'Ғ': "GHE", # CYRILLIC CAPITAL LETTER GHE WITH STROKE
+    'ғ': "ghe", # CYRILLIC SMALL LETTER GHE WITH STROKE
+    'Ҕ': "GHE", # CYRILLIC CAPITAL LETTER GHE WITH MIDDLE HOOK
+    'ҕ': "ghe", # CYRILLIC SMALL LETTER GHE WITH MIDDLE HOOK
+    'Җ': "ZHE", # CYRILLIC CAPITAL LETTER ZHE WITH DESCENDER
+    'җ': "zhe", # CYRILLIC SMALL LETTER ZHE WITH DESCENDER
+    'Ҙ': "ZE", # CYRILLIC CAPITAL LETTER ZE WITH DESCENDER
+    'ҙ': "ze", # CYRILLIC SMALL LETTER ZE WITH DESCENDER
+    'Қ': "KA", # CYRILLIC CAPITAL LETTER KA WITH DESCENDER
+    'қ': "ka", # CYRILLIC SMALL LETTER KA WITH DESCENDER
+    'Ҝ': "KA", # CYRILLIC CAPITAL LETTER KA WITH VERTICAL STROKE
+    'ҝ': "ka", # CYRILLIC SMALL LETTER KA WITH VERTICAL STROKE
+    'Ҟ': "KA", # CYRILLIC CAPITAL LETTER KA WITH STROKE
+    'ҟ': "ka", # CYRILLIC SMALL LETTER KA WITH STROKE
+    'Ҡ': "KA", # CYRILLIC CAPITAL LETTER BASHKIR KA
+    'ҡ': "ka", # CYRILLIC SMALL LETTER BASHKIR KA
+    'Ң': "EN", # CYRILLIC CAPITAL LETTER EN WITH DESCENDER
+    'ң': "en", # CYRILLIC SMALL LETTER EN WITH DESCENDER
+    'Ҥ': "ENGHE", # CYRILLIC CAPITAL LIGATURE EN GHE
+    'ҥ': "enghe", # CYRILLIC SMALL LIGATURE EN GHE
+    'Ҧ': "PE", # CYRILLIC CAPITAL LETTER PE WITH MIDDLE HOOK
+    'ҧ': "pe", # CYRILLIC SMALL LETTER PE WITH MIDDLE HOOK
+    'Ҩ': "HA", # CYRILLIC CAPITAL LETTER ABKHASIAN HA
+    'ҩ': "ha", # CYRILLIC SMALL LETTER ABKHASIAN HA
+    'Ҫ': "ES", # CYRILLIC CAPITAL LETTER ES WITH DESCENDER
+    'ҫ': "es", # CYRILLIC SMALL LETTER ES WITH DESCENDER
+    'Ҭ': "TE", # CYRILLIC CAPITAL LETTER TE WITH DESCENDER
+    'ҭ': "te", # CYRILLIC SMALL LETTER TE WITH DESCENDER
+    'Ү': "U", # CYRILLIC CAPITAL LETTER STRAIGHT U
+    'ү': "u", # CYRILLIC SMALL LETTER STRAIGHT U
+    'Ұ': "U", # CYRILLIC CAPITAL LETTER STRAIGHT U WITH STROKE
+    'ұ': "u", # CYRILLIC SMALL LETTER STRAIGHT U WITH STROKE
+    'Ҳ': "HA", # CYRILLIC CAPITAL LETTER HA WITH DESCENDER
+    'ҳ': "ha", # CYRILLIC SMALL LETTER HA WITH DESCENDER
+    'Ҵ': "TETSE", # CYRILLIC CAPITAL LIGATURE TE TSE
+    'ҵ': "tetse", # CYRILLIC SMALL LIGATURE TE TSE
+    'Ҷ': "CHE", # CYRILLIC CAPITAL LETTER CHE WITH DESCENDER
+    'ҷ': "che", # CYRILLIC SMALL LETTER CHE WITH DESCENDER
+    'Ҹ': "CHE", # CYRILLIC CAPITAL LETTER CHE WITH VERTICAL STROKE
+    'ҹ': "che", # CYRILLIC SMALL LETTER CHE WITH VERTICAL STROKE
+    'Һ': "SHHA", # CYRILLIC CAPITAL LETTER SHHA
+    'һ': "shha", # CYRILLIC SMALL LETTER SHHA
+    'Ҽ': "CHE", # CYRILLIC CAPITAL LETTER ABKHASIAN CHE
+    'ҽ': "che", # CYRILLIC SMALL LETTER ABKHASIAN CHE
+    'Ҿ': "CHE", # CYRILLIC CAPITAL LETTER ABKHASIAN CHE WITH DESCENDER
+    'ҿ': "che", # CYRILLIC SMALL LETTER ABKHASIAN CHE WITH DESCENDER
+    'Ӏ': "PALOCHKA", # CYRILLIC LETTER PALOCHKA
+    'Ӂ': "ZHE", # CYRILLIC CAPITAL LETTER ZHE WITH BREVE
+    'ӂ': "zhe", # CYRILLIC SMALL LETTER ZHE WITH BREVE
+    'Ӄ': "KA", # CYRILLIC CAPITAL LETTER KA WITH HOOK
+    'ӄ': "ka", # CYRILLIC SMALL LETTER KA WITH HOOK
+    'Ӆ': "EL", # CYRILLIC CAPITAL LETTER EL WITH TAIL
+    'ӆ': "el", # CYRILLIC SMALL LETTER EL WITH TAIL
+    'Ӈ': "EN", # CYRILLIC CAPITAL LETTER EN WITH HOOK
+    'ӈ': "en", # CYRILLIC SMALL LETTER EN WITH HOOK
+    'Ӊ': "EN", # CYRILLIC CAPITAL LETTER EN WITH TAIL
+    'ӊ': "en", # CYRILLIC SMALL LETTER EN WITH TAIL
+    'Ӌ': "CHE", # CYRILLIC CAPITAL LETTER KHAKASSIAN CHE
+    'ӌ': "che", # CYRILLIC SMALL LETTER KHAKASSIAN CHE
+    'Ӎ': "EM", # CYRILLIC CAPITAL LETTER EM WITH TAIL
+    'ӎ': "em", # CYRILLIC SMALL LETTER EM WITH TAIL
+    'ӏ': "palochka", # CYRILLIC SMALL LETTER PALOCHKA
+    'Ӑ': "A", # CYRILLIC CAPITAL LETTER A WITH BREVE
+    'ӑ': "a", # CYRILLIC SMALL LETTER A WITH BREVE
+    'Ӓ': "A", # CYRILLIC CAPITAL LETTER A WITH DIAERESIS
+    'ӓ': "a", # CYRILLIC SMALL LETTER A WITH DIAERESIS
+    'Ӕ': "AIE", # CYRILLIC CAPITAL LIGATURE A IE
+    'ӕ': "aie", # CYRILLIC SMALL LIGATURE A IE
+    'Ӗ': "IE", # CYRILLIC CAPITAL LETTER IE WITH BREVE
+    'ӗ': "ie", # CYRILLIC SMALL LETTER IE WITH BREVE
+    'Ә': "SCHWA", # CYRILLIC CAPITAL LETTER SCHWA
+    'ә': "schwa", # CYRILLIC SMALL LETTER SCHWA
+    'Ӛ': "SCHWA", # CYRILLIC CAPITAL LETTER SCHWA WITH DIAERESIS
+    'ӛ': "schwa", # CYRILLIC SMALL LETTER SCHWA WITH DIAERESIS
+    'Ӝ': "ZHE", # CYRILLIC CAPITAL LETTER ZHE WITH DIAERESIS
+    'ӝ': "zhe", # CYRILLIC SMALL LETTER ZHE WITH DIAERESIS
+    'Ӟ': "ZE", # CYRILLIC CAPITAL LETTER ZE WITH DIAERESIS
+    'ӟ': "ze", # CYRILLIC SMALL LETTER ZE WITH DIAERESIS
+    'Ӡ': "DZE", # CYRILLIC CAPITAL LETTER ABKHASIAN DZE
+    'ӡ': "dze", # CYRILLIC SMALL LETTER ABKHASIAN DZE
+    'Ӣ': "I", # CYRILLIC CAPITAL LETTER I WITH MACRON
+    'ӣ': "i", # CYRILLIC SMALL LETTER I WITH MACRON
+    'Ӥ': "I", # CYRILLIC CAPITAL LETTER I WITH DIAERESIS
+    'ӥ': "i", # CYRILLIC SMALL LETTER I WITH DIAERESIS
+    'Ӧ': "O", # CYRILLIC CAPITAL LETTER O WITH DIAERESIS
+    'ӧ': "o", # CYRILLIC SMALL LETTER O WITH DIAERESIS
+    'Ө': "O", # CYRILLIC CAPITAL LETTER BARRED O
+    'ө': "o", # CYRILLIC SMALL LETTER BARRED O
+    'Ӫ': "O", # CYRILLIC CAPITAL LETTER BARRED O WITH DIAERESIS
+    'ӫ': "o", # CYRILLIC SMALL LETTER BARRED O WITH DIAERESIS
+    'Ӭ': "E", # CYRILLIC CAPITAL LETTER E WITH DIAERESIS
+    'ӭ': "e", # CYRILLIC SMALL LETTER E WITH DIAERESIS
+    'Ӯ': "U", # CYRILLIC CAPITAL LETTER U WITH MACRON
+    'ӯ': "u", # CYRILLIC SMALL LETTER U WITH MACRON
+    'Ӱ': "U", # CYRILLIC CAPITAL LETTER U WITH DIAERESIS
+    'ӱ': "u", # CYRILLIC SMALL LETTER U WITH DIAERESIS
+    'Ӳ': "U", # CYRILLIC CAPITAL LETTER U WITH DOUBLE ACUTE
+    'ӳ': "u", # CYRILLIC SMALL LETTER U WITH DOUBLE ACUTE
+    'Ӵ': "CHE", # CYRILLIC CAPITAL LETTER CHE WITH DIAERESIS
+    'ӵ': "che", # CYRILLIC SMALL LETTER CHE WITH DIAERESIS
+    'Ӷ': "GHE", # CYRILLIC CAPITAL LETTER GHE WITH DESCENDER
+    'ӷ': "ghe", # CYRILLIC SMALL LETTER GHE WITH DESCENDER
+    'Ӹ': "YERU", # CYRILLIC CAPITAL LETTER YERU WITH DIAERESIS
+    'ӹ': "yeru", # CYRILLIC SMALL LETTER YERU WITH DIAERESIS
+    'Ӻ': "GHE", # CYRILLIC CAPITAL LETTER GHE WITH STROKE AND HOOK
+    'ӻ': "ghe", # CYRILLIC SMALL LETTER GHE WITH STROKE AND HOOK
+    'Ӽ': "HA", # CYRILLIC CAPITAL LETTER HA WITH HOOK
+    'ӽ': "ha", # CYRILLIC SMALL LETTER HA WITH HOOK
+    'Ӿ': "HA", # CYRILLIC CAPITAL LETTER HA WITH STROKE
+    'ӿ': "ha", # CYRILLIC SMALL LETTER HA WITH STROKE
 }
 
 # Conversion table from Unicode categories to text:
@@ -336,6 +579,8 @@ categories_to_text = {
 # Default parameters. Can be overcome by command line options
 parameters = {
     "Filter": True,
+    "Encoding": "",
+    "Force UTF-8": False,
     "Analyze": False,
     "Translated": False,
     "Untranslated": False,
@@ -343,10 +588,18 @@ parameters = {
 
 
 ################################################################################
+def initialize_debugging(program_name):
+    """Debugging set up"""
+    console_log_format = program_name + ": %(levelname)s: %(message)s"
+    logging.basicConfig(format=console_log_format, level=logging.DEBUG)
+    logging.disable(logging.INFO)
+
+
+################################################################################
 def display_help():
     """Displays usage and help"""
     print(
-        "usage: unicode2ascii [-a|--analyze] [-t|--translated] [-u|--untranslated]",
+        "usage: unicode2ascii [-a|--analyze] [-f|--force] [-t|--translated] [-u|--untranslated]",
         file=sys.stderr,
     )
     print("       [--debug] [--help|-?] [--version] [--]", file=sys.stderr)
@@ -355,6 +608,7 @@ def display_help():
         file=sys.stderr,
     )
     print("  -a|--analyze        Analyze Unicode characters", file=sys.stderr)
+    print("  -f|--force          Assume standard input is UTF-8", file=sys.stderr)
     print("  -t|--translated     Report translated Unicode characters", file=sys.stderr)
     print(
         "  -u|--untranslated   Report untranslated Unicode characters", file=sys.stderr
@@ -389,10 +643,11 @@ def process_command_line():
 
     # option letters followed by : expect an argument
     # same for option strings followed by =
-    character_options = "atu?"
+    character_options = "aftu?"
     string_options = [
         "analyze",
         "debug",
+        "force",
         "help",
         "translated",
         "untranslated",
@@ -413,6 +668,9 @@ def process_command_line():
         if option in ("-a", "--analyze"):
             parameters["Filter"] = False
             parameters["Analyze"] = True
+
+        if option in ("-f", "--force"):
+            parameters["Force UTF-8"] = True
 
         elif option in ("-t", "--translated"):
             parameters["Filter"] = False
@@ -449,13 +707,19 @@ def _print_in_table_format(character, ascii_equivalent=""):
     logging.debug('ascii_equivalent = "%s"', ascii_equivalent)
 
     if ascii_equivalent:
-        print(
-            "    '{}': \"{}\", # {}".format(
-                character, ascii_equivalent, unicodedata.name(character)
+        try:
+            print(
+                "    '{}': \"{}\", # {}".format(
+                    character, ascii_equivalent, unicodedata.name(character)
+                )
             )
-        )
-    else:
-        print("    '{}': \"\", # {}".format(character, unicodedata.name(character)))
+        except ValueError:
+            print("    '{}': \"{}\", # UNKNOWN character in unicodedata.name()".format(character, ascii_equivalent))
+        else:
+            try:
+                print("    '{}': \"\", # {}".format(character, unicodedata.name(character)))
+            except ValueError:
+                print("    '{}': \"\", # UNKNOWN character in unicodedata.name()".format(character))
 
 
 ################################################################################
@@ -555,7 +819,10 @@ def analyze_unicode_character(character):
     """Return all information about a Unicode character"""
     if ord(character) > 127:
         print("Character: '{}'".format(character))
-        print("Name: {}".format(unicodedata.name(character)))
+        try:
+            print("Name: {}".format(unicodedata.name(character)))
+        except ValueError:
+            print("Name: UNKNOWN")
         try:
             print("Decimal value: {}".format(unicodedata.decimal(character)))
         except ValueError:
@@ -616,19 +883,45 @@ def analyze_unicode_character(character):
 
 
 ################################################################################
+def get_encoding():
+    """Try to get the input encoding"""
+    encoding = locale.getpreferredencoding()
+    if not encoding:
+        encoding = locale.getdefaultlocale()[1]
+    if not encoding:
+        # Assume default UTF-8 encoding:
+        encoding = "UTF-8"
+
+    return encoding
+
+
+################################################################################
+def convert_encoding(text, convert_from, convert_to="UTF-8"):
+    """Try to convert the input encoding"""
+    return text.encode('latin1').decode(convert_from).encode(convert_to)
+
+
+################################################################################
 def main():
     """The program's main entry point"""
     program_name = os.path.basename(sys.argv[0])
-    console_log_format = program_name + ": %(levelname)s: %(message)s"
-    logging.basicConfig(format=console_log_format, level=logging.DEBUG)
-    logging.disable(logging.INFO)
 
+    initialize_debugging(program_name)
     process_environment_variables()
     process_command_line()
 
+    if parameters["Force UTF-8"]:
+        parameters["Encoding"] = "UTF-8"
+    else:
+        parameters["Encoding"] = get_encoding()
+
     for line in sys.stdin:
         for character in line:
+            if parameters["Encoding"] != "UTF-8":
+                character = convert_encoding(character, parameters["Encoding"])
+
             ascii_equivalent = unicode_to_ascii_character(character)
+
             if parameters["Filter"]:
                 print(ascii_equivalent, end="")
             elif character != os.linesep:

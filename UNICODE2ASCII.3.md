@@ -77,3 +77,5 @@ So far, only the following Unicode character sets are processed for missing ASCI
 * Unicode symbols
 * General Punctuation
 * Number Forms
+* Cyrillic
+
